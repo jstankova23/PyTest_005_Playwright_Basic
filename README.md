@@ -1,4 +1,5 @@
-# PyTest_005_Playwright_Basic  
+# PyTest_005_Playwright_Basic
+
 Automatizované testy pomocí **Playwright + Pytest** (Python)
 
 **Autor:** Jana Staňková  
@@ -10,99 +11,107 @@ Automatizované testy pomocí **Playwright + Pytest** (Python)
 
 ## Popis projektu
 
-Tento projekt obsahuje ucelenou sbírku testů vytvořených během studia Playwrightu s Pytestem.
-Ukazuje práci s lokátory, cookies, mobilními zařízeními, různými prohlížeči, debugováním, trace,
-zpomalováním testů, čekáním, parametrizací a dalšími užitečnými funkcemi Playwrightu.
+Tento projekt obsahuje sbírku testů vytvořených během studia Playwrightu a Pytestu.  
+Demonstruje:
 
-Projekt obsahuje 9 testovacích souborů s celkem 30 testovacími funkcemi.
-Díky parametrizaci některých testů se celkový počet spuštění zvyšuje na 34 běhů.
+- práci s lokátory
+- práci s cookies
+- mobilní zařízení (vestavěné profily Playwrightu)
+- více webových prohlížečů (Chromium, Firefox, WebKit)
+- debugování (PWDEBUG, page.pause, trace)
+- zpomalování testů a čekání
+- parametrizaci a fixtures
 
-Z výukových důvodů je fixture browser nastavena s viditelným oknem prohlížeče (headless=False),
-aby bylo možné pozorovat průběh testů a zároveň využívat Playwright Inspector.
+Projekt obsahuje:
 
-Projekt obsahuje běžné fixtures, fixtures pro cookies,
-parametrizované fixtures i mobilní konfigurace.
+- **9 testovacích souborů**
+- **30 testovacích funkcí**
+- díky parametrizaci → **34 skutečných běhů**
 
-Celý projekt slouží k výuce automatizace testování webových stránek na desktopu,
-v různých mobilních zařízeních, i ve více webových prohlížečích.
+Fixture `browser` je záměrně v režimu **headless=False**, aby bylo během výuky možné sledovat průběh testů
+a používat Playwright Inspector.
+
 ---
 
 ## Struktura projektu
 
+```text
 PyTest_005_Playwright_Basic/
 │
 ├─ tests/
-│ ├─ test_pw_cookies.py
-│ ├─ test_pw_debug.py
-│ ├─ test_pw_delay.py
-│ ├─ test_pw_engeto.py
-│ ├─ test_pw_filtry.py
-│ ├─ test_pw_login.py
-│ ├─ test_pw_metody.py
-│ ├─ test_pw_mobil.py
-│ └─ test_pw_prohlizec.py
+│   ├─ test_pw_cookies.py
+│   ├─ test_pw_debug.py
+│   ├─ test_pw_delay.py
+│   ├─ test_pw_engeto.py
+│   ├─ test_pw_filtry.py
+│   ├─ test_pw_login.py
+│   ├─ test_pw_metody.py
+│   ├─ test_pw_mobil.py
+│   └─ test_pw_prohlizec.py
 │
-├─ conftest.py              # společné fixtures pro testy
-├─ devices.py               # pomocný skript (výpis vestavěných mobilních zařízení Playwrightu)
-├─ README.md
+├─ conftest.py          # společné fixtures pro testy
+├─ devices.py           # výpis vestavěných mobilních zařízení Playwrightu
 ├─ requirements.txt
+├─ README.md
 └─ .gitignore
+
 
 ---
 
-## Výpis testovacích funkcí v jednotlivých souborech:
+## Výpis testovacích funkcí
 
+```text
 tests/test_pw_cookies.py
-test_refuse_cookies                                # zpracování cookies přímo v testovací funkci
-test_accept_all_cookies                            # zpracování cookies přímo v testovací funkci
-test_cookies                                       # zpracování cookies v pomocné funkci
-test_dobrovsky_title                               # zpracování cookies pomocí fixture
+  ├─ test_refuse_cookies               # zpracování cookies přímo v testu
+  ├─ test_accept_all_cookies           # zpracování cookies přímo v testu
+  ├─ test_cookies                      # pomocná funkce pro cookies
+  └─ test_dobrovsky_title              # cookies pomocí speciální fixture
 
 tests/test_pw_debug.py
-test_pwdebug_click                                 # režim debuggování pomocí proměnné prostředí PWDEBUG
-test_click_screenshot                              # funkce page.screenshot()
-test_trace                                         # recording / Nahrávání testu
-test_page_pause                                    # test interaktivního debugování, pytest vyžaduje manuální zásah testera
+  ├─ test_pwdebug_click                # režim PWDEBUG
+  ├─ test_click_screenshot             # page.screenshot()
+  ├─ test_trace                         # trace recording
+  └─ test_page_pause                   # interaktivní zastavení testu
 
-tests/test_pw_delay.py         
-test_slow_load                                     # metoda page.wait_for_load_state()  
-test_slow_selector                                 # metoda page.wait_for_selector()
-test_cookies_slow                                  # metoda page.wait_for_timeout()
-test_slow_mo                                       # parametr slow_mo
+tests/test_pw_delay.py
+  ├─ test_slow_load                    # page.wait_for_load_state()
+  ├─ test_slow_selector                # page.wait_for_selector()
+  ├─ test_cookies_slow                 # page.wait_for_timeout()
+  └─ test_slow_mo                      # parametr slow_mo
 
 tests/test_pw_engeto.py
-test_hlavni_nadpis_je_viditelny                    # test pro ověření viditelnosti zvoleného nadpisu
-test_viditelnost_loga                              # test pro ověření viditelnosti loga v hlavním menu
-test_viditelnost_linku_vyukovy_portal              # test pro ověření viditelnosti odkazu na Výukový portál z hlavního menu
-test_odkaz_na_spravnou_url                         # test ověření, že odkaz na Výukový portál v hlavním menu vede na správnou URL - kontrola atributu v HTML struktuře
-test_klik_na_odkaz                                 # test ověření, že odkaz na Výukový portál v hlavním menu vede na správnou URL - kontrola kliknutím
-test_scroll_a_presmerovani_na_blog                 # test skrolování myší, kliknutí na link Blog v zápatí domovské stránky a kontrola URL po přesměrování
-test_presmerovani_a_navrat[Blog-blog]              # parametrizovaný test: kliknutí na odkaz Blog v domovské stránce Engeta, kontrola URL po přesměrování a návrat zpět
-test_presmerovani_a_navrat[Reference-absolventi]   # parametrizovaný test: kliknutí na odkaz Reference v domovské stránce Engeta, kontrola URL po přesměrování a návrat zpět
+  ├─ test_hlavni_nadpis_je_viditelny   # viditelnost nadpisu
+  ├─ test_viditelnost_loga             # viditelnost loga
+  ├─ test_viditelnost_linku_vyukovy_portal    # odkaz "Výukový portál"
+  ├─ test_odkaz_na_spravnou_url        # kontrola href přes HTML
+  ├─ test_klik_na_odkaz                # kliknutí → kontrola URL
+  ├─ test_scroll_a_presmerovani_na_blog        # scroll → klik → URL
+  ├─ test_presmerovani_a_navrat[Blog-blog]     # parametrizace 1
+  └─ test_presmerovani_a_navrat[Reference-absolventi]   # parametrizace 2
 
 tests/test_pw_filtry.py
-test_filter                                        # test filtrování akademií na stránce Engeta
+  └─ test_filter                       # filtrování akademií (nestabilní web)
 
 tests/test_pw_login.py
-test_login                                         # test přihlášení na stránce Demoqa a přesměrování na cílovou podstránku
+  └─ test_login                        # login + redirect na Demoqa
 
 tests/test_pw_metody.py
-test_click                                         # metoda click()
-test_text_input                                    # metoda fill()
-test_login                                         # metoda fill()
-test_press_enter                                   # metoda press()
-test_hover                                         # metoda hover()   POZOR - NEBYLA V SEZNAMU
-test_more_h4                                       # metoda all()
-test_drag_and_drop                                 # metoda drag_to()   POZOR - NEBYLA V SEZNAMU
+  ├─ test_click                        # metoda click()
+  ├─ test_text_input                   # metoda fill()
+  ├─ test_login                        # fill()
+  ├─ test_press_enter                  # press()
+  ├─ test_hover                        # hover()
+  ├─ test_more_h4                      # all()
+  └─ test_drag_and_drop                # drag_to()
 
-tests/test_pw_mobil.py                             # test přesměrování kliknutím na link "Výukový portál" po otevření hlavního menu přes ikonku hamburger menu ve vybraných typech mobilů
-test_mobile_menu[iPhone 12]                        
-test_mobile_menu[Pixel 5]                          
+tests/test_pw_mobil.py
+  ├─ test_mobile_menu[iPhone 12]       # test mobilního menu – iPhone 12
+  └─ test_mobile_menu[Pixel 5]         # test mobilního menu – Pixel 5
 
-tests/test_pw_prohlizec.py                         # test ověřuje, že odkaz "Výukový portál" je viditelný na stránce Engeto při spuštění v různých webových prohlížečích
-test_browser_kompatibilita[chromium]               
-test_browser_kompatibilita[firefox]                
-test_browser_kompatibilita[webkit]                  
+tests/test_pw_prohlizec.py
+  ├─ test_browser_kompatibilita[chromium]
+  ├─ test_browser_kompatibilita[firefox]
+  └─ test_browser_kompatibilita[webkit]
 
 ---
 
